@@ -1,0 +1,4 @@
+cat SOA*.csv > SOAV.csv
+cat SOJ*.csv > SOJV.csv
+cat NOA*.csv > NOAV.csv
+cat NOJ*.csv > NOJV.csv
