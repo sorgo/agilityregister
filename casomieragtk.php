@@ -274,6 +274,17 @@ $window->set_size_request(750, 550);
 $window->connect_simple('destroy', array('Gtk','main_quit'));
 $window->add($vbox = new GtkVBox());
 $window->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse("#ffffff"));
+
+$window->connect_after('key-press-event', 'onKeyPress'); 
+
+function onKeyPress($widget, $event) { 
+  global $righthand, $lefthand; 
+  if (get_class($widget)=="GtkWindow") {
+  	echo "Pressed: " . $event->keyval; 
+	}
+  return true; 
+}
+
 $G["rezimdisplej"]=new GtkLabel('A->A');
 $G["sensorstatus1"]=new GtkLabel('[ ]');
 $G["sensorstatus2"]=new GtkLabel('[ ]');
