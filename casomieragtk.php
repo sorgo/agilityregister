@@ -19,15 +19,6 @@ $G["bodyJ"]=array(18,15,13,12,11,10,9,8,7,6,5,4,3,2,1);
 $cmd="mplayer scifi-online.mp3";
 shell_exec("nohup $cmd > /dev/null 2> /dev/null & echo $!");
 
-// define menu definition 
-$menu_definition = array(
-	//'_Nastavenie' => array('_Základné údaje', '_Behy', "_Súčty",'Š_tartovka'),
-    //'_Tlač' => array("_Prezentácia","Š_tartovka",'Papiere pre _zapisovateľov',"<hr>","_Behy","_Súčty",'_Export'),
-    '_Zobraz' => array("_Displej"),
-    "_Režim" =>  array( array('A->A', 'A->B', 'B->A', 'B->B')),
-    //'_Program' => array("_Koniec","_O programe"),
-);
-
 function getmicrotime(){
 	list($usec, $sec) = explode(" ",microtime());
 	return ((float)$usec + (float)$sec);
@@ -201,7 +192,6 @@ $G["historia"]=array(
 	4=>"-"
 );
 
-
 $G["bezim"]=false;
 
 $f=fopen($G["dir"]."/startovka.csv","r");
@@ -222,13 +212,35 @@ foreach($G["behy"] as $k => $v) {
 	}
 }
 
-$G["timy"]=array();	
-$f=fopen($G["dir"]."/timy.csv","r");
+$G["timy"]=array();
+$f=@fopen($G["dir"]."/timy.csv","r");
 while ($l=fgetcsv($f,1000)) {
 	if (substr($l[0],0,1)=="#") continue;
 	$G["timy"][$l[0]]=array("name"=>$l[1], "teams"=>array($l[2],$l[3],$l[4]));
 }
 #print_r($G["timy"]);
+
+$menubehy=$menusucty=array();
+foreach($G["behy"] as $b) {
+	$menubehy[]=$b[0].' - '.$b[1];
+}
+
+foreach($G["sucty"] as $k=>$s) {
+	$menusucty[]=$k;
+}
+
+// define menu definition
+$menu_definition = array(
+		//'_Nastavenie' => array('_Základné údaje', '_Behy', "_Súčty",'Š_tartovka'),
+
+		'_Zobraz' => array("_Displej"),
+		"_Režim" =>  array( array('A->A', 'A->B', 'B->A', 'B->B')),
+		'_Tlač' => array("_Prezentácia","Š_tartovka",'Papiere pre _zapisovateľov','_VZ'),
+		"_Výsledky"=>$menubehy,
+		"_Súčty"=>$menusucty,
+
+		//'_Program' => array("_Koniec","_O programe"),
+);
 
 #var_export($G["vysledky"]);
 #exit;
@@ -1590,8 +1602,46 @@ function on_menu_select($menu_item) {
     switch ($item) {
     	case "_Koniec": Gtk::main_quit();break;
     	case "_Displej": show_display();break;
-    	case "Š_tartovka": uprav_startovku();break;
+    	#case "Š_tartovka": uprav_startovku();break;
     	case "_Behy": uprav_behy();break;
+
+    	case "Papiere pre _zapisovateľov":
+				$cmd = './vysledky.php ZAPIS';
+    			print $cmd."\n";
+    			shell_exec("nohup $cmd > /dev/null 2> /dev/null & echo $!");
+    			break;
+		case "_VZ":
+   				$cmd = './vysledky.php VZ';
+   				print $cmd."\n";
+   				shell_exec("nohup $cmd > /dev/null 2> /dev/null & echo $!");
+   				break;
+    	case "Š_tartovka":
+				$cmd = './vysledky.php START';
+    			print $cmd."\n";
+    			shell_exec("nohup $cmd > /dev/null 2> /dev/null & echo $!");
+    			break;
+    	case "_Prezentácia":
+				$cmd = './vysledky.php PREZENCKA';
+    			print $cmd."\n";
+    			shell_exec("nohup $cmd > /dev/null 2> /dev/null & echo $!");
+  	 			break;
+
+    	default:
+    		$id = explode(' ',$item);
+    		$id = $id[0];
+    		if (isset($G["behy"][$id])) {
+    			#print 'BEH'.$id;
+    			$cmd = './vysledky.php '.$id;
+    			print $cmd."\n";
+    			shell_exec("nohup $cmd > /dev/null 2> /dev/null & echo $!");
+    		}
+    		if (isset($G["sucty"][$item])) {
+    			#print 'SUCET'.$item;
+    			$cmd = './vysledky.php '.str_replace(","," ",$G["sucty"][$item]);
+    			print $cmd."\n";
+    			shell_exec("nohup $cmd > /dev/null 2> /dev/null & echo $!");
+    		}
+    		break;
     }
 }
 
