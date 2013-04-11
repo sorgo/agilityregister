@@ -51,10 +51,9 @@ if ($this->noheader) {
     	//Logo
    	    if ($this->PageNo()==1) {
 					#$this->Image("logo_all.jpg",$this->CurPageFormat[$this->CurOrientation=="P" ? 0 : 1]-40,$this->y,320/10*.8,278/10*.8);
-					#$this->Image("mc12/mc12.jpg",$this->CurPageFormat[$this->CurOrientation=="P" ? 0 : 1]-40,$this->y,164/10*1.4,200/10*1.4);
-   	    			$this->Image("js13.jpg",$this->CurPageFormat[$this->CurOrientation=="P" ? 0 : 1]-60,$this->y,600/10*0.75,384/10*0.75);
+#					$this->Image("mc12/mc12.jpg",$this->CurPageFormat[$this->CurOrientation=="P" ? 0 : 1]-40,$this->y,164/10*1.4,200/10*1.4);
 					#$this->Image("eukanuba.jpg",$this->CurPageFormat[$this->CurOrientation=="P" ? 0 : 1]-75,$this->y,60,22);
-
+  $this->Image("js13.jpg",$this->CurPageFormat[$this->CurOrientation=="P" ? 0 : 1]-60,$this->y,600/10*0.75,384/10*0.75);
 					if ($argv[1]!="ZAPIS") {
 #						$this->Image("rc.jpg",$this->CurPageFormat[$this->CurOrientation=="P" ? 0 : 1]-45,$this->CurPageFormat[$this->CurOrientation=="P" ? 1 : 0]-18,35,10);
 #						$this->Image("phc.jpg",10,$this->CurPageFormat[$this->CurOrientation=="P" ? 1 : 0]-18,35,10);
@@ -92,7 +91,7 @@ if ($this->noheader) {
     	//Arial italic 8
     	$this->SetFont('SkodaSans','I',8);
     	//Page number
-   	$this->Cell(0,10,($this->garant!="" ? "Garant: ".iconv("utf-8","windows-1250",$this->garant)." " : "")."Spracovanï¿½: ".date("d.m.Y H:i").' Strana '.$this->PageNo().'/{nb}',0,0,'C');
+   	$this->Cell(0,10,($this->garant!="" ? "Garant: ".iconv("utf-8","windows-1250",$this->garant)." " : "")."Spracované: ".date("d.m.Y H:i").' Strana '.$this->PageNo().'/{nb}',0,0,'C');
 }
 	}
 
@@ -558,7 +557,8 @@ foreach($G["behy"] as $k => $v) {
 
 
 $G["timy"]=array();	
-$f=fopen($G["dir"]."/timy.csv","r");
+$f=@fopen($G["dir"]."/timy.csv","r");
+if ($f)
 while ($l=fgetcsv($f,1000)) {
 	if (substr($l[0],0,1)=="#") continue;
 	$G["timy"][$l[0]]=array("name"=>$l[1]);
@@ -577,7 +577,7 @@ while ($l=fgetcsv($f,1000)) {
 exportsucet();
 */
 
-function zrobsucet($behy,$nadpis="Sï¿½ï¿½et behov") {
+function zrobsucet($behy,$nadpis="Súèet behov") {
 	global $pdf,$G;
 
 	$filter="";
@@ -606,7 +606,7 @@ function zrobsucet($behy,$nadpis="Sï¿½ï¿½et behov") {
 
 	
 
-	$hlavicka=array("por","ï¿½.","kat.","meno psovoda","meno psa","klub","plemeno");
+	$hlavicka=array("por","è.","kat.","meno psovoda","meno psa","klub","plemeno");
 
 
 	if ($body) {
@@ -621,14 +621,14 @@ function zrobsucet($behy,$nadpis="Sï¿½ï¿½et behov") {
 		$hlavicka[]="TB";
 	} else {
 		foreach($behy as $beh) {
-			$hlavicka[]=$beh." ï¿½as";
+			$hlavicka[]=$beh." èas";
 			$hlavicka[]=$beh." TB";
 			foreach($G["vysledky"][$beh] as $v) {
 				$rataj[$v[0]]=$v[0];
 			}
 		}
 	
-		$hlavicka[]="ï¿½as";
+		$hlavicka[]="èas";
 		$hlavicka[]="TB";
 	}
 
@@ -741,7 +741,7 @@ function zrobsucet($behy,$nadpis="Sï¿½ï¿½et behov") {
 	$pdf->SetFont('SkodaSans','BL',12);
 	$pdf->Write(10,$nadpis);
 	$pdf->ln(4);
-	$nadpis2="Sï¿½ï¿½et: ";
+	$nadpis2="Súèet: ";
 	foreach ($behy as $beh) {
 		$nadpis2.=$beh." ".iconv("utf-8","windows-1250",$G["behy"][$beh][1])." (".$G["behy"][$beh][3].") + ";
 		#$nadpis.=iconv("utf-8","windows-1250",$G["behy"][$beh][1])." (".$G["behy"][$beh][3].") + ";
@@ -755,7 +755,7 @@ function zrobsucet($behy,$nadpis="Sï¿½ï¿½et behov") {
 
 
 
-function zrobteamysucet($behy,$nadpis="Sï¿½ï¿½et behov - druï¿½stvï¿½") {
+function zrobteamysucet($behy,$nadpis="Súèet behov - družstvá") {
 	global $pdf,$G;
 
 	$filter="";
@@ -773,7 +773,7 @@ function zrobteamysucet($behy,$nadpis="Sï¿½ï¿½et behov - druï¿½stvï¿½") {
 	}
 
 
-	$hlavicka=array("por","ï¿½.","kat.","meno psovoda","meno psa","klub","plemeno");
+	$hlavicka=array("por","è.","kat.","meno psovoda","meno psa","klub","plemeno");
 
 
 	if ($body) {
@@ -788,14 +788,14 @@ function zrobteamysucet($behy,$nadpis="Sï¿½ï¿½et behov - druï¿½stvï¿½") {
 		$hlavicka[]="TB";
 	} else {
 		foreach($behy as $beh) {
-			$hlavicka[]=$beh." ï¿½as";
+			$hlavicka[]=$beh." èas";
 			$hlavicka[]=$beh." TB";
 			foreach($G["vysledky"][$beh] as $v) {
 				$rataj[$v[0]]=$v[0];
 			}
 		}
 	
-		$hlavicka[]="ï¿½as";
+		$hlavicka[]="èas";
 		$hlavicka[]="TB";
 	}
 
@@ -1007,7 +1007,7 @@ function zrobteamysucet($behy,$nadpis="Sï¿½ï¿½et behov - druï¿½stvï¿½") {
 	$pdf->SetFont('SkodaSans','BL',12);
 	$pdf->Write(10,$nadpis);
 	$pdf->ln(4);
-	$nadpis2="Sï¿½ï¿½et: ";
+	$nadpis2="Súèet: ";
 	foreach ($behy as $beh) {
 		$nadpis2.=$beh." ".iconv("utf-8","windows-1250",$G["behy"][$beh][1])." (".$G["behy"][$beh][3].") + ";
 		#$nadpis.=iconv("utf-8","windows-1250",$G["behy"][$beh][1])." (".$G["behy"][$beh][3].") + ";
@@ -1034,26 +1034,26 @@ function zrobpdf($beh) {
 	$pdf->Write(10,iconv("utf-8","windows-1250",$par[1]));
 	$pdf->Ln();
 	$pdf->SetFont('skodasans','',8);
-	$pdf->Write(8,'Dï¿½tum: '.$par[3]);
+	$pdf->Write(8,'Dátum: '.$par[3]);
 	$pdf->Ln(4);
 	$pdf->Write(8,'Rozhodca: '.iconv("utf-8","windows-1250",$par[4]));
 	$pdf->Ln(4);
-	$pdf->Write(8,'Dï¿½ka parkï¿½ru: '.$par[5]." m");
+	$pdf->Write(8,'Dåžka parkúru: '.$par[5]." m");
 	$pdf->Ln(4);
-	$pdf->Write(8,'Poï¿½et prekï¿½ok: '.$par[6]);
+	$pdf->Write(8,'Poèet prekážok: '.$par[6]);
 	$pdf->Ln(4);
-	$pdf->Write(8,'ï¿½tandardnï¿½ ï¿½as: '.$par[7]." s (".sprintf("%1.2f",$par[5]/$par[7])." m/s)");
+	$pdf->Write(8,'Štandardný èas: '.$par[7]." s (".sprintf("%1.2f",$par[5]/$par[7])." m/s)");
 	$pdf->Ln(4);
-	$pdf->Write(8,'Maximï¿½lny ï¿½as: '.$par[8]." s (".sprintf("%1.2f",$par[5]/$par[8])." m/s)");
+	$pdf->Write(8,'Maximálny èas: '.$par[8]." s (".sprintf("%1.2f",$par[5]/$par[8])." m/s)");
 	$pdf->Ln(4);
-	$pdf->Write(8,'Poï¿½et tï¿½mov: '.count($vv));
+	$pdf->Write(8,'Poèet tímov: '.count($vv));
 	$pdf->Ln(10);
 
 $poradie=1;
 
 $hlavicka=array(
 "por.", #0
-"ï¿½.", #1
+"è.", #1
 "kat.", #2
 "meno psovoda", #3
 "klub", #4
@@ -1061,8 +1061,8 @@ $hlavicka=array(
 "plemeno", #6
 "CH", #7
 "OD", #8
-"ï¿½as", #9
-"TB ï¿½as", #10
+"èas", #9
+"TB èas", #10
 "TB", #11
 "post", #12
 "hodn", #13
@@ -1191,15 +1191,15 @@ $atsbody=0;
 	$pdf->SetFont('skodasans','',8);
 	$spolu=count($vv);
 	$pdf->Write(8,
-	"ï¿½tartovali: ".($stats["pocet"]+0)." (".sprintf("%d",$stats["pocet"]/$spolu*100)."%) ".
-	"ï¿½istï¿½ behy: ".($stats["cisto"]+0)." (".sprintf("%d",$stats["cisto"]/$spolu*100)."%) ".
+	"štartovali: ".($stats["pocet"]+0)." (".sprintf("%d",$stats["pocet"]/$spolu*100)."%) ".
+	"èisté behy: ".($stats["cisto"]+0)." (".sprintf("%d",$stats["cisto"]/$spolu*100)."%) ".
 	"V: ".($stats["V"]+0)." (".sprintf("%d",$stats["V"]/$spolu*100)."%) ".
 	"VD: ".($stats["VD"]+0)." (".sprintf("%d",$stats["VD"]/$spolu*100)."%) ".
 	"D: ".($stats["D"]+0)." (".sprintf("%d",$stats["D"]/$spolu*100)."%) ".
 	"BO: ".($stats["BO"]+0)." (".sprintf("%d",$stats["BO"]/$spolu*100)."%) ".
 	"DIS: ".($stats["DIS"]+0)." (".sprintf("%d",$stats["DIS"]/$spolu*100)."%) ".
-	($stats["DIS"]<$stats["pocet"] ? "Priemernï¿½ postupovï¿½ rï¿½chlosï¿½: ".sprintf("%1.2f",$stats["rychlost"]/($stats["pocet"]-$stats["DIS"]))." m/s ":"").
-	($stats["max"]>0 ? "Max. postupovï¿½ rï¿½chlosï¿½ï¿½: ".sprintf("%1.2f",$stats["max"])." m/s" :"")
+	($stats["DIS"]<$stats["pocet"] ? "Priemerná postupová rýchlos: ".sprintf("%1.2f",$stats["rychlost"]/($stats["pocet"]-$stats["DIS"]))." m/s ":"").
+	($stats["max"]>0 ? "Max. postupová rýchlos½: ".sprintf("%1.2f",$stats["max"])." m/s" :"")
 	);
 
 	foreach($vv as $k=>$v) {
@@ -1235,29 +1235,29 @@ function zrobpdfteamy($beh) {
 	$pdf->AddPage();
 	$pdf->SetFont('SkodaSans','BL',16);
 
-	$pdf->Write(10,iconv("utf-8","windows-1250",$par[1])." - druï¿½stvï¿½");
+	$pdf->Write(10,iconv("utf-8","windows-1250",$par[1])." - družstvá");
 	$pdf->Ln();
 	$pdf->SetFont('skodasans','',8);
-	$pdf->Write(8,'Dï¿½tum: '.$par[3]);
+	$pdf->Write(8,'Dátum: '.$par[3]);
 	$pdf->Ln(4);
 	$pdf->Write(8,'Rozhodca: '.iconv("utf-8","windows-1250",$par[4]));
 	$pdf->Ln(4);
-	$pdf->Write(8,'Dï¿½ka parkï¿½ru: '.$par[5]." m");
+	$pdf->Write(8,'Dåžka parkúru: '.$par[5]." m");
 	$pdf->Ln(4);
-	$pdf->Write(8,'Poï¿½et prekï¿½ok: '.$par[6]);
+	$pdf->Write(8,'Poèet prekážok: '.$par[6]);
 	$pdf->Ln(4);
-	$pdf->Write(8,'ï¿½tandardnï¿½ ï¿½as: '.$par[7]." s (".sprintf("%1.2f",$par[5]/$par[7])." m/s)");
+	$pdf->Write(8,'Štandardný èas: '.$par[7]." s (".sprintf("%1.2f",$par[5]/$par[7])." m/s)");
 	$pdf->Ln(4);
-	$pdf->Write(8,'Maximï¿½lny ï¿½as: '.$par[8]." s (".sprintf("%1.2f",$par[5]/$par[8])." m/s)");
+	$pdf->Write(8,'Maximálny èas: '.$par[8]." s (".sprintf("%1.2f",$par[5]/$par[8])." m/s)");
 	#$pdf->Ln(4);
-	#$pdf->Write(8,'Poï¿½et tï¿½mov: '.count($vv));
+	#$pdf->Write(8,'Poèet tímov: '.count($vv));
 	$pdf->Ln(10);
 
 $poradie=1;
 
 $hlavicka=array(
 "por.", #0
-"ï¿½.", #1
+"è.", #1
 "kat.", #2
 "meno psovoda", #3
 "klub", #4
@@ -1265,8 +1265,8 @@ $hlavicka=array(
 "plemeno", #6
 "CH", #7
 "OD", #8
-"ï¿½as", #9
-"TB ï¿½as", #10
+"èas", #9
+"TB èas", #10
 "TB", #11
 "post", #12
 "hodn", #13
@@ -1514,7 +1514,7 @@ function statistika() {
 	$pdf->AddPage();
 	$pdf->SetFont('SkodaSans','BL',16);
 
-	$pdf->Write(10,"ï¿½tatistika");
+	$pdf->Write(10,"Štatistika");
 	$pdf->Ln();
 	$pdf->SetFont('skodasans','',8);
 	
@@ -1537,10 +1537,10 @@ function statistika() {
 	}
 	
 	$pdf->SetFont('','B',10);
-	$pdf->write(10,"Poï¿½et tï¿½mov: ".count($G["startovka"]));
+	$pdf->write(10,"Poèet tímov: ".count($G["startovka"]));
 	$pdf->ln();
 	$pdf->SetFont('','B',10);
-	$pdf->write(10,"Veï¿½kostnï¿½ kategï¿½rie");
+	$pdf->write(10,"Ve¾kostné kategórie");
 	$pdf->ln(4);
 	$pdf->SetFont('','',8);
 	foreach($velkosti as $k=>$v) { 	
@@ -1549,7 +1549,7 @@ function statistika() {
 	}
 
 	$pdf->SetFont('','B',10);
-	$pdf->write(10,"Vï¿½konnostnï¿½ kategï¿½rie");
+	$pdf->write(10,"Výkonnostné kategórie");
 	$pdf->ln(4);
 	$pdf->SetFont('','',8);
 	foreach($kategorie as $k=>$v) { 	
@@ -1575,14 +1575,14 @@ function statistika() {
 	arsort($krajiny);
 	$cc=array(
 	"sk"=>"Slovensko",
-	"hu"=>"Maï¿½arsko",
+	"hu"=>"Maïarsko",
 	"si"=>"Slovinsko",
 	"ru"=>"Rusko",
-	"cz"=>"ï¿½eskï¿½ republika",
-	"at"=>"Rakï¿½sko",
-	"pl"=>"Poï¿½sko",
-	"cr"=>"Chorvï¿½tsko",
-	"ch"=>"ï¿½vajï¿½iarsko",
+	"cz"=>"Èeská republika",
+	"at"=>"Rakúsko",
+	"pl"=>"Po¾sko",
+	"cr"=>"Chorvátsko",
+	"ch"=>"Švajèiarsko",
 	);
 	foreach($krajiny as $k=>$v) { 	
 		$krajina=$cc[$k];
@@ -1592,7 +1592,7 @@ function statistika() {
 	$pdf->ln(4);
 
 	$pdf->SetFont('','B',10);
-	$pdf->write(10,"Plemenï¿½");
+	$pdf->write(10,"Plemená½");
 	$pdf->ln(8);
 	$pdf->SetFont('','',8);
 	arsort($plemena);
@@ -1601,7 +1601,7 @@ function statistika() {
 	}
 	$pdf->ln(4);
 	$pdf->SetFont('','B',8);
-	$pdf->write(10,"S preukazom pï¿½vodu: ".$pp." (".round($pp/count($G["startovka"])*100)." %)");
+	$pdf->write(10,"S preukazom pôvodu: ".$pp." (".round($pp/count($G["startovka"])*100)." %)");
 	$pdf->ln(4);
 
 }
@@ -1621,14 +1621,14 @@ function zapis() {
 	}
 
 	$hlavicka=array(
-		"ï¿½.",
+		"è.",
 		"kat.",
 		"psovod",
 		#"klub",
 		"pes",
 		"chyby",
 		"odmietnutia",
-		"ï¿½as"
+		"èas"
 	);
 
 #var_export($tab);
@@ -1639,10 +1639,10 @@ function zapis() {
 	foreach($kategorie as $k) {
 		$pdf->AddPage();
 		$pdf->SetFont('SkodaSans','BL',10);
-		$pdf->Write(10,"Zï¿½pis ".$k);
+		$pdf->Write(10,"Zápis ".$k);
 		$pdf->SetFont('SkodaSans','B',10);
 		$pdf->Ln(4);
-		$pdf->Write(10,"Beh:                                     Dï¿½tum:                                       Zapisovateï¿½:");
+		$pdf->Write(10,"Beh:                                     Dátum:                                       Zapisovate¾:");
 		$pdf->Ln();
 		$pdf->ZapisTable($hlavicka,$tab[$k]);
 	}
@@ -1708,12 +1708,12 @@ function startovka($param) {
 	$pdf->AddPage();
 	$pdf->SetFont('SkodaSans','BL',16);
 
-	$pdf->Write(10,"Šartovná listina");
+	$pdf->Write(10,"Štartovná listina");
 	$pdf->Ln();
 	$pdf->SetFont('skodasans','',8);
 
 	$hlavicka=array(
-		"è.",
+		"È.",
 		"Kat.",
 		"Meno psovoda",
 		"Klub",
@@ -1804,7 +1804,7 @@ function startovkaTeams($param) {
 	$pdf->SetFont('skodasans','',8);
 
 	$hlavicka=array(
-		"è.",
+		"È.",
 		"Kat.",
 		"Meno psovoda",
 		"Klub",
@@ -1859,20 +1859,20 @@ function prezencka() {
 	$pdf->AddPage();
 	$pdf->SetFont('SkodaSans','BL',16);
 
-	$pdf->Write(10,"Prezenï¿½nï¿½ listina");
+	$pdf->Write(10,"Prezenèná listina");
 	$pdf->Ln();
 	$pdf->SetFont('skodasans','',8);
 
 	$hlavicka=array(
-		"ï¿½.",
+		"È.",
 		"Kat.",
 		"Meno psovoda",
 		"Klub",
 		"Pes",
 		"VZ",
 		"Platba",
-		"Meraï¿½",
-		"Poznï¿½mka"
+		"Mera",
+		"Poznámka"
 	);
 
 #var_export($tab);
@@ -1982,18 +1982,23 @@ function vz() {
 
 		$par=$beh;
 		$vv=$G["vysledky"][$beh[0]];
+		
+		$par[2]=str_replace(array(",SAV",",MAV",",LAV"),array("","",""),$par[2]);
 
 		if(strlen($par[2])==1) continue;
+		if (strlen($par[2])!=3) continue;
 
 		$poradie=1;
 		$pocet=count($vv);
 
 		foreach($vv as $v) {
 			if ($v[3]=="N") $pocet--;
+			if (substr($G['startovka'][$v[0]][0],1,2)=="AV") $pocet--;
 		}
 
 		foreach($vv as $v) {
 			if ($v[3]=="N") continue;
+			if (substr($G['startovka'][$v[0]][0],1,2)=="AV") continue;
 
 			$riadok=array();
 
@@ -2163,7 +2168,9 @@ if ($behy[count($behy)-1]=="T") {
 
 
 
-if ($argv[1]=="ATS") {
+if ($argv[1]=="ASKA") {
+	exportaska();
+} elseif ($argv[1]=="ATS") {
 	$G["robATS"]=true;
 	foreach($G["behy"] as $v)
 		zrobpdf($v[0]);
@@ -2268,7 +2275,8 @@ if ($argv[1]=="ATS") {
 	echo "ALL\t\tkompletne PDF s vysledkami\n";
 	echo "SUCTY\t\tkompletne PDF s vysledkami suctov behov\n";
 	echo "STAT\t\tstatistika prihlasenych\n";
-	echo "ATS\t\tbody do ATS z pretekov\n\n";
+	echo "ATS\t\tbody do ATS z pretekov\n";
+	echo "ASKA\t\texport vysledkov pre ASKA\n\n";
 	echo "BEHY\t\tvypise zoznam behov\n\n";
 	echo "VZ\t\tlac do VZ\n\n";
 	echo "VZMSR\t\tlac do VZ pre MSR\n\n";
@@ -2418,6 +2426,64 @@ function sucetbody($a,$b) {
 			}
 		}
 	}
+}
+
+function exportaska() {
+	global $G;
+	
+	$outfile = $G["dir"]."/print/vysledky.csv";
+	$out = "";
+	$eol = "\n";
+	$sep = ";";
+	foreach($G["behy"] as $k=>$b) {
+		#print_r($b);
+		$out.="[HEAD]".$eol;
+		$out.="preteky".$sep.$G["nazov"].$eol;
+		$out.="datum".$sep.$b[3].$eol;
+
+		$val1 = $b[2];
+		$val2 = $b[2];
+		if (strlen($val1)>3) {
+			$val1=(strpos($val1,"umpin")>0?"OJ":"OA");
+			if ($val2=="SAV,MAV,LAV") {
+				
+			} else {
+				$val2=substr($val2,0,1);
+			}
+		} else {
+			$val2=substr($val2,0,1);
+			$val1=substr($val1,1);
+		}
+		$out.="beh".$sep.$val1.$eol;
+		$out.="kategoria".$sep.$val2.$eol;
+		$out.="rozhodca".$sep.$b[4].$eol;
+		$out.="dlzka".$sep.$b[5].$eol;
+		$out.="standard".$sep.$b[6].$eol;
+		$out.="maximum".$sep.$b[7].$eol;
+		
+		$out.="[/HEAD]".$eol;
+
+		$out.="[DATA]".$eol;
+		$out.="PORADIE".$sep."VZ".$sep."PRIEZVISKO".$sep."MENO".$sep."PES".$sep."PLEMENO".$sep."KLUB".$sep."KRAJINA".$sep."CHYBY".$sep."ODMIETNUTIA".$sep."CAS".$sep."DISK".$eol;
+		$poradie=1;
+		foreach($G["vysledky"][$k] as $v) {
+			$t = $G["startovka"][$v[0]];
+			$cas = $v[3];
+			$dis = 0;
+			if ($cas == "N") continue;
+			if ($cas == "DIS") {
+				$cas = "";
+				$dis = 1;
+			}
+			$out.=$poradie.$sep.$t[9].$sep.$t[3].$sep.$t[2].$sep.$t[5].$sep.$t[6].$sep.$t[4].$sep.$t[8].$sep.$v[1].$sep.$v[2].$sep.$cas.$sep.$dis.$eol;
+#			print_r($v);
+#			print_r($G["startovka"][$v[0]]);
+		}
+		$out .= "[/DATA]".$eol;
+	}
+	$of = fopen($outfile, "wa");
+	fputs($of, iconv("utf-8","windows-1250",$out));
+	fclose($of);
 }
 
 ?>
